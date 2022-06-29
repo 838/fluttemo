@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // showSemanticsDebugger: true,
     );
   }
 }
@@ -48,6 +49,23 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Semantics(
+              container: true,
+              label: 'test',
+              checked: _counter.isEven,
+              enabled: true,
+              child: const ExcludeSemantics(
+                excluding: true,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('test'),
+                ),
+              ),
+            ),
+            Checkbox(
+              value: _counter.isEven,
+              onChanged: (_) => _incrementCounter,
+            ),
             const Text(
               'You have pushed the button this many times:',
             ),

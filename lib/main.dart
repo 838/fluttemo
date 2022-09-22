@@ -4,6 +4,16 @@ void main() {
   runApp(const MyApp());
 }
 
+enum MyEnum {
+  one,
+  two,
+}
+
+extension MyEnumExtension on MyEnum {
+  bool get isOne => this == MyEnum.one;
+  bool get isTwo => this == MyEnum.two;
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -30,11 +40,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  MyEnum _myEnum = MyEnum.one;
 
-  void _incrementCounter() {
+  void setMyEnum(MyEnum myEnum) {
     setState(() {
-      _counter++;
+      _myEnum = myEnum;
     });
   }
 
@@ -48,20 +58,29 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
             Text(
-              '$_counter',
+              '$_myEnum',
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        children: [
+          if (_myEnum.isTwo)
+            FloatingActionButton(
+              onPressed: () => setMyEnum(MyEnum.one),
+              tooltip: 'One',
+              child: const Icon(Icons.numbers),
+            ),
+          const Spacer(),
+          if (_myEnum.isOne)
+            FloatingActionButton(
+              onPressed: () => setMyEnum(MyEnum.two),
+              tooltip: 'Two',
+              child: const Icon(Icons.numbers),
+            ),
+        ],
       ),
     );
   }

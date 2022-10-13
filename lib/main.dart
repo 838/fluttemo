@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -42,58 +40,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: SizedBox(
-        width: screenSize.width,
-        height: screenSize.height,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned.fill(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Semantics(
-                label: 'Filled Widget',
-                button: true,
-                container: true,
-                focusable: true,
-                onTap: () => log('tapped'),
-                excludeSemantics: true,
-                child: const Text(
-                  'Filled Text widget',
-                  textAlign: TextAlign.center,
-                ),
-              ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
             ),
-            Positioned(
-              top: screenSize.height / 2 - 50.0,
-              left: 0,
-              right: 0,
-              child: const Center(
-                child: Text(
-                  'You have pushed the button this many times:',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            Positioned(
-              top: screenSize.height / 2,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  '$_counter',
-                  style: Theme.of(context).textTheme.headline4,
-                  textAlign: TextAlign.center,
-                ),
-              ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),

@@ -15,19 +15,25 @@ class MyApp extends StatelessWidget {
           slivers: <Widget>[
             const SliverAppBar(
               title: Text("SliverList Example"),
-              expandedHeight: 100.0,
-              floating: true,
               pinned: true,
             ),
             SliverList(
               delegate: SliverChildListDelegate(
                 List.generate(
                   100,
-                  (index) => Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Sliver Item ${index.toString()}',
-                      style: const TextStyle(fontSize: 22.0),
+                  (index) => Semantics(
+                    key: ValueKey(index),
+                    label: '$index',
+                    excludeSemantics: true,
+                    child: SizedBox(
+                      height: 100.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Sliver Item $index',
+                          style: const TextStyle(fontSize: 22.0),
+                        ),
+                      ),
                     ),
                   ),
                 ),

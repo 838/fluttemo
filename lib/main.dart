@@ -14,15 +14,14 @@ class MyApp extends StatelessWidget {
         body: CustomScrollView(
           slivers: <Widget>[
             const SliverAppBar(
-              title: Text("SliverList Example"),
-              expandedHeight: 100.0,
+              title: Text("Spoken Content Example"),
               floating: true,
               pinned: true,
             ),
             SliverList(
               delegate: SliverChildListDelegate(
                 List.generate(
-                  100,
+                  15,
                   (index) => Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(

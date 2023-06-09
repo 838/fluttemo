@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+
+enum CounterState {
+  loading,
+  odd,
+  even,
+}
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      showSemanticsDebugger: false,
     );
   }
 }
@@ -30,12 +38,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  var _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  final _counterState = BehaviorSubject<CounterState>.seeded(CounterState.even);
+
+  void _incrementCounter() async {
+    _counterState.value = CounterState.loading;
+
+    await Future.delayed(const Duration(seconds: 3));
+    _counter++;
+
+    _counterState.value =
+        _counter.isEven ? CounterState.even : CounterState.odd;
   }
 
   @override
@@ -51,17 +65,27 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            MergeSemantics(
+              child: StreamBuilder<CounterState>(
+                stream: _counterState.asBroadcastStream(),
+                builder: (context, snapshot) {
+                  return Semantics(
+                    button: true,
+                    label: "$_counter ${snapshot.data?.name}",
+                    excludeSemantics: true,
+                    child: TextButton(
+                      onPressed: _incrementCounter,
+                      child: Text(
+                        '$_counter',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

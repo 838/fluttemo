@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/subjects.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,13 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final state = BehaviorSubject.seeded(true);
 
   @override
   Widget build(BuildContext context) {
@@ -48,21 +43,72 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            _buildSwitch('✅'),
+            _buildSwitch('❌'),
+            _buildCheckbox('✅'),
+            _buildCheckbox('❌'),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+    );
+  }
+
+  Row _buildSwitch(
+    String text,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ExcludeSemantics(child: Text(text)),
+        StreamBuilder(
+          stream: state,
+          initialData: state.value,
+          builder: (
+            BuildContext context,
+            AsyncSnapshot snapshot,
+          ) {
+            return Switch(
+              value: snapshot.data,
+              onChanged: (val) async {
+                if (text == '❌') {
+                  await Future.delayed(const Duration(milliseconds: 200));
+                }
+                state.value = val;
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Row _buildCheckbox(
+    String text,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ExcludeSemantics(child: Text(text)),
+        StreamBuilder(
+          stream: state,
+          initialData: state.value,
+          builder: (
+            BuildContext context,
+            AsyncSnapshot snapshot,
+          ) {
+            return Checkbox(
+              value: snapshot.data,
+              onChanged: (val) async {
+                if (text == '❌') {
+                  await Future.delayed(const Duration(milliseconds: 200));
+                }
+
+                state.value = val ?? true;
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }
